@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Certificate Generator</title>
+<style>
+  body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    background: url(./athlete-silhouette-marathon-h2u2efp37ylfcv9f.jpg) no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+
+  .form-container {
+    -webkit-backdrop-filter: blur(15px);
+    backdrop-filter: blur(15px);
+    color: white;
+    padding: 2.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(39, 38, 38, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
+
+  .header-title {
+    font-size: 1.75rem;
+    font-weight: bold;
+    margin: 0;
+    width: 60%;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+  }
+
+  .form-container h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-container p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+  }
+
+  input[type="text"] {
+    padding: 12px 15px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 400px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+
+  .button-container {
+    margin-top: 20px;
+  }
+
+  button {
+    padding: 12px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    margin: 0 5px; 
+  }
+
+  #generateBtn {
+    background-color: #3b82f6;
+    color: white;
+  }
+
+  button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  #downloadBtn {
+    background-color: #10b981;
+    color: white;
+  }
+
+  button:disabled {
+    background-color: #6b7280;
+    color: #d1d5db;
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  #certificateCanvas {
+    border: 2px solid #222;
+    margin-top: 20px;
+    display: none;
+    max-width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 480px) {
+    .form-container {
+      padding: 2rem 1.5rem;
+    }
+
+    .form-header {
+      flex-direction: row;
+      gap: 15px;
+    }
+
+    .header-title {
+      width: 100%;
+      font-size: 1.5rem;
+    }
+
+    .button-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    button {
+      width: 90%;
+      margin: 8px 0;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="form-container">
+  <div class="form-header">
+    <img src="./AkolaPolice Logo.png" alt="Logo 1" class="logo">
+    <h1 class="header-title">AKOLA POLICE</h1>
+    <img src="./WhatsApp_Image_2025-10-29_at_2.16.15_PM-removebg-preview.png" alt="Logo 2" class="logo">
+  </div>
+
+  <h2>Run For Unity</h2>
+  <p>Enter your full name below to generate your certificate of completion.</p>
+
+  <input type="text" id="username" placeholder="Enter your name here ...">
+  <br>
+  
+  <div class="button-container">
+    <button onclick="generateCertificate()" id="generateBtn">Generate Certificate</button>
+    <button onclick="downloadCertificate()" id="downloadBtn">Download Certificate</button>
+  </div>
+</div>
+
+<canvas id="certificateCanvas" width="1123" height="794"></canvas>
+
+<script>
+  const canvas = document.getElementById("certificateCanvas");
+  const ctx = canvas.getContext("2d");
+  const downloadBtn = document.getElementById("downloadBtn");
+
+  const bgImage = new Image();
+  
+  bgImage.src = "certificate1.jpeg";
+  bgImage.crossOrigin = "anonymous";
+
+  downloadBtn.disabled = true;
+
+  function generateCertificate() {
+    const name = document.getElementById("username").value.trim();
+
+    if (!name) {
+      alert("Please enter your name!");
+      downloadBtn.disabled = true; 
+      return;
+    }
+
+    if (bgImage.complete) {
+      drawCanvas(name);
+    } else {
+      bgImage.onload = function() {
+        drawCanvas(name);
+      }
+    }
+  }
+
+  function drawCanvas(name) {
+    ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+
+    ctx.font = "bold 40px Serif";
+    ctx.fillStyle = "#8d0000";
+    ctx.textAlign = "center";
+    ctx.fillText(name, canvas.width / 1.7, 310);
+
+    downloadBtn.disabled = false;
+  }
+
+  function downloadCertificate() {
+    const link = document.createElement("a");
+    link.download = "Certificate.png";
+    try {
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    } catch (e) {
+      console.error("Canvas toDataURL error:", e);
+      alert("Error downloading image. This might be due to a cross-origin image. Make sure your certificate image is hosted correctly with CORS enabled.");
+    }
+  }
+</script>
+
+</body>
+</html>
